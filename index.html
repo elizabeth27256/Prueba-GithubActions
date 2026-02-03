@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Actions - Guía de Análisis y Diseño</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 GitHub Actions</h1>
+            <p>Automatización de Flujos de Trabajo en el Desarrollo de Software</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">Análisis y Diseño de Sistemas</p>
+        </header>
+
+        <div class="content">
+            <!-- Sección 1: ¿Qué es GitHub Actions? -->
+            <div class="section">
+                <h2>¿Qué es GitHub Actions?</h2>
+                <p>
+                    GitHub Actions es una plataforma de <strong>integración continua y entrega continua (CI/CD)</strong> 
+                    que permite automatizar, personalizar y ejecutar flujos de trabajo de desarrollo de software 
+                    directamente en tu repositorio de GitHub.
+                </p>
+                <p>
+                    Con GitHub Actions, puedes crear flujos de trabajo personalizados para compilar, probar y 
+                    desplegar tu código. Los workflows se activan por eventos específicos en tu repositorio, 
+                    como push, pull requests, o incluso de forma programada.
+                </p>
+
+                <div class="info-box">
+                    <h4>💡 ¿Sabías que...?</h4>
+                    <p>GitHub Actions fue lanzado oficialmente en noviembre de 2019 y ahora es utilizado por millones de desarrolladores en todo el mundo para automatizar sus procesos de desarrollo.</p>
+                </div>
+            </div>
+
+            <!-- Sección 2: Componentes Principales -->
+            <div class="section">
+                <h2>Componentes Principales</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>📄 Workflows</h4>
+                        <p>Procesos automatizados configurables que ejecutan uno o más trabajos. Se definen en archivos YAML en la carpeta .github/workflows/</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>⚡ Events</h4>
+                        <p>Actividades específicas que disparan un workflow, como push, pull_request, schedule, workflow_dispatch, entre otros.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>💼 Jobs</h4>
+                        <p>Conjunto de pasos que se ejecutan en el mismo runner. Los jobs pueden ejecutarse en paralelo o de forma secuencial.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🔧 Steps</h4>
+                        <p>Tareas individuales que ejecutan comandos o acciones. Cada step se ejecuta como un proceso separado.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🎯 Actions</h4>
+                        <p>Aplicaciones personalizadas reutilizables que realizan tareas complejas, como checkout de código o configuración de entornos.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🖥️ Runners</h4>
+                        <p>Servidores que ejecutan los workflows. GitHub proporciona runners alojados (Ubuntu, Windows, macOS) o puedes usar propios.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 3: Ejemplo de Workflow -->
+            <div class="section">
+                <h2>Ejemplo de Workflow Básico</h2>
+                <p>Un archivo de workflow típico se ve así:</p>
+
+                <div class="code-block">
+name: Mi Primer Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ejemplo-job:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+      
+      - name: Ejecutar un comando
+        run: |
+          echo "¡Hola desde GitHub Actions!"
+          echo "Usuario: ${{ github.actor }}"
+          echo "Repositorio: ${{ github.repository }}"
+                </div>
+
+                <p>
+                    Este workflow se ejecuta cada vez que hay un <code>push</code> a la rama <code>main</code>, 
+                    descarga el código del repositorio y ejecuta comandos personalizados.
+                </p>
+            </div>
+
+            <!-- Sección 4: Tokens de Autenticación -->
+            <div class="section">
+                <h2>Tokens de Autenticación</h2>
+                <p>
+                    GitHub Actions utiliza tokens para autenticar y autorizar operaciones con la API de GitHub. 
+                    Existen dos tipos principales de tokens:
+                </p>
+
+                <h3>1. GITHUB_TOKEN</h3>
+                <ul class="benefits-list">
+                    <li>Se genera automáticamente para cada ejecución del workflow</li>
+                    <li>Caduca al finalizar la ejecución del job</li>
+                    <li>Tiene permisos limitados al repositorio actual</li>
+                    <li>No requiere configuración manual</li>
+                    <li>Es la opción más segura para operaciones básicas</li>
+                </ul>
+
+                <h3>2. Personal Access Token (PAT)</h3>
+                <ul class="benefits-list">
+                    <li>Creado manualmente por el usuario</li>
+                    <li>Permisos personalizables según necesidad</li>
+                    <li>Puede acceder a múltiples repositorios</li>
+                    <li>Debe almacenarse como Secret en el repositorio</li>
+                    <li>Útil para operaciones que requieren permisos elevados</li>
+                </ul>
+
+                <div class="token-comparison">
+                    <h3>Comparación de Tokens</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>GITHUB_TOKEN</th>
+                                <th>Personal Access Token</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Generación</strong></td>
+                                <td>Automática</td>
+                                <td>Manual</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Duración</strong></td>
+                                <td>Solo durante el workflow</td>
+                                <td>Configurable (días/años)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Alcance</strong></td>
+                                <td>Repositorio actual</td>
+                                <td>Múltiples repositorios</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Permisos</strong></td>
+                                <td>Limitados y predefinidos</td>
+                                <td>Personalizables</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Configuración</strong></td>
+                                <td>No requiere</td>
+                                <td>Requiere creación y almacenamiento</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Seguridad</strong></td>
+                                <td>Muy alta</td>
+                                <td>Alta (si se maneja correctamente)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Importante - Seguridad de Tokens</h4>
+                    <p>
+                        <strong>Nunca</strong> incluyas tokens directamente en tu código o archivos de configuración. 
+                        Siempre utiliza los <strong>Secrets</strong> de GitHub para almacenar información sensible.
+                    </p>
+                    <p style="margin-top: 10px;">
+                        Los secrets se cifran y solo están disponibles durante la ejecución del workflow, 
+                        protegiéndolos de accesos no autorizados.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Sección 5: Beneficios de GitHub Actions -->
+            <div class="section">
+                <h2>Beneficios de GitHub Actions</h2>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4>🔄 Automatización Completa</h4>
+                        <p>Automatiza todo el ciclo de vida del desarrollo: build, test, deploy, release y más.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🌐 Integración Nativa</h4>
+                        <p>Está completamente integrado con GitHub, sin necesidad de herramientas externas.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>💰 Costo-Efectivo</h4>
+                        <p>Gratis para repositorios públicos, con minutos generosos para privados.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🎨 Altamente Personalizable</h4>
+                        <p>Crea workflows personalizados con YAML o usa miles de acciones del marketplace.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>🚀 Múltiples Plataformas</h4>
+                        <p>Ejecuta workflows en Linux, Windows, macOS y hasta en contenedores.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h4>👥 Comunidad Activa</h4>
+                        <p>Miles de acciones creadas por la comunidad disponibles para usar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 6: Casos de Uso -->
+            <div class="section">
+                <h2>Casos de Uso Comunes</h2>
+
+                <h3>🧪 Integración Continua (CI)</h3>
+                <p>
+                    Ejecutar pruebas automáticas cada vez que se hace push al repositorio, 
+                    asegurando que el código nuevo no rompa funcionalidades existentes.
+                </p>
+
+                <h3>🚢 Despliegue Continuo (CD)</h3>
+                <p>
+                    Desplegar automáticamente aplicaciones a producción o ambientes de staging 
+                    cuando se fusionan cambios a ramas específicas.
+                </p>
+
+                <h3>📦 Publicación de Paquetes</h3>
+                <p>
+                    Publicar automáticamente paquetes a npm, PyPI, Maven Central u otros 
+                    registros cuando se crea una nueva release.
+                </p>
+
+                <h3>🔍 Análisis de Código</h3>
+                <p>
+                    Ejecutar herramientas de análisis estático, linters y detectores de 
+                    vulnerabilidades en cada pull request.
+                </p>
+
+                <h3>📝 Automatización de Issues</h3>
+                <p>
+                    Etiquetar automáticamente issues, asignar reviewers, o cerrar issues 
+                    obsoletos según reglas personalizadas.
+                </p>
+
+                <h3>📊 Generación de Reportes</h3>
+                <p>
+                    Generar automáticamente documentación, coverage reports o release notes.
+                </p>
+            </div>
+
+            <!-- Sección 7: Buenas Prácticas -->
+            <div class="section">
+                <h2>Buenas Prácticas</h2>
+
+                <ul class="benefits-list">
+                    <li>Usa versiones específicas de actions (ej: @v4) en lugar de @main para mayor estabilidad</li>
+                    <li>Minimiza el uso de recursos ejecutando solo workflows necesarios</li>
+                    <li>Almacena información sensible exclusivamente en Secrets</li>
+                    <li>Documenta tus workflows con comentarios claros en el YAML</li>
+                    <li>Usa jobs paralelos para reducir tiempos de ejecución</li>
+                    <li>Implementa caching para dependencias y reducir tiempos de build</li>
+                    <li>Configura notificaciones para monitorear fallos</li>
+                    <li>Revisa regularmente los logs de ejecución</li>
+                    <li>Mantén tus workflows simples y enfocados en una tarea</li>
+                </ul>
+
+                <div class="info-box">
+                    <h4>💡 Tip Profesional</h4>
+                    <p>
+                        Usa <code>workflow_dispatch</code> como evento adicional en tus workflows para poder 
+                        ejecutarlos manualmente desde la interfaz de GitHub cuando necesites probar cambios.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Sección 8: Recursos -->
+            <div class="section">
+                <h2>Recursos Adicionales</h2>
+                <p>Para aprender más sobre GitHub Actions, consulta estos recursos:</p>
+
+                <ul class="benefits-list">
+                    <li>Documentación oficial: <a href="https://docs.github.com/actions" target="_blank">docs.github.com/actions</a></li>
+                    <li>GitHub Actions Marketplace: Encuentra miles de acciones preconstruidas</li>
+                    <li>GitHub Learning Lab: Tutoriales interactivos gratuitos</li>
+                    <li>Awesome GitHub Actions: Lista curada de recursos y ejemplos</li>
+                    <li>Comunidad de GitHub: Foros y discusiones sobre GitHub Actions</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <footer>
+            <p><strong>GitHub Actions</strong> - Automatización del Desarrollo de Software</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Material educativo para Análisis y Diseño de Sistemas</p>
+            <p style="margin-top: 5px; font-size: 0.85em; opacity: 0.8;">© 2026 - Proyecto Académico</p>
+        </footer>
+    </div>
+</body>
+</html>
